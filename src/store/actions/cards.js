@@ -1,5 +1,5 @@
 import { takeEvery, select, put, call } from 'redux-saga/effects'
-import { eventChannel, END } from 'redux-saga'
+import { countup, countdown } from '@/utils'
 
 export const SET_ACTIVE_CARD = "SET_ACTIVE_CARD";
 export const SET_COUNT_DOWN = "SET_COUNT_DOWN";
@@ -25,40 +25,7 @@ export function setCardProp(card=null,prop=null,val=null) {
 	};
 }
 
-function countdown(secs) {
-	return eventChannel(emitter => {
-			const iv = setInterval(() => {
-				secs -= 1
-				if (secs >= 0) {
-					emitter(secs)
-				} else {
-					emitter(END)
-				}
-			}, 1000);
-			return () => {
-				clearInterval(iv)
-			}
-		}
-	)
-}
 
-function countup(max=300) {
-	let secs = 0
-	return eventChannel(emitter => {
-			const iv = setInterval(() => {
-				secs++ 
-				if (secs < max) {
-					emitter(secs)
-				} else {
-					emitter(END)
-				}
-			}, 1000);
-			return () => {
-				clearInterval(iv)
-			}
-		}
-	)
-}
 
 function* clearCards(cards) {
 	for(let i=0; i<cards.length;i++) {
@@ -68,12 +35,19 @@ function* clearCards(cards) {
 }
 
 let timerChannel = null
+let maxTime = 10
 function* timerGameLogic(action) {
-	timerChannel = yield call(countup, 120);
+	timerChannel = yield call(countup, maxTime);
+	let cards = yield select(state=>state.cards.cards)
 
 	yield put({type: SET_GAME_STATE, active: true})
 	yield takeEvery(timerChannel, function* (secs) {
 		yield put({type: SET_TIMER, val: secs})
+		if(maxTime <= secs) {
+			yield put({type: SET_GAME_STATE, active: false})
+			yield put({type: SET_TIMER, val: 0})
+			yield clearCards(cards)
+		}
 	})
 }
 
@@ -89,6 +63,7 @@ function* setActiveCardLogic(action) {
 		yield put(setCardProp(clickCard, 'active', true))
 		let count = 5
 		fiveSecChannel = yield call(countdown, count);
+
 
 		yield put({type: SET_COUNT_DOWN, count})
 		yield takeEvery(fiveSecChannel, function* (secs) {

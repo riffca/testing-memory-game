@@ -10,7 +10,9 @@ import './PageLayout.less';
 const { Content } = Layout;
 
 const PageLayout = ({ title, children, onBack }) => {
+	const timer = useSelector(state=>state.cards.timer)
 	const softGame = useSelector(state=>state.cards.softGame)
+	const gameIsActive = useSelector(state=>state.cards.gameActive)
 	const location = useLocation()
 	const dispatch = useDispatch()
 	return (
@@ -18,9 +20,16 @@ const PageLayout = ({ title, children, onBack }) => {
 			<PageHeader 
 				onBack={onBack ? onBack : false} 
 				title={title} 
-				tags={location.pathname !== '/statistics' ? <Link to="/statistics">Statistics</Link> : null} 
+
+				tags={ 
+					location.pathname !== '/statistics' ? <Link key={"1"} to="/statistics">Statistics</Link> : null
+
+					} 
 				extra={[
-					<Button type="primary" onClick={()=>dispatch({type: 'SET_GAME_LEVEL'})} key="1">{softGame ? 'Soft' : 'Long' } Game</Button>
+					gameIsActive ? <div key={'1'} className='timeout'>,
+						<span className="timeout__number">{timer}</span>
+						</div> : null,
+						<Button type="primary" onClick={()=>dispatch({type: 'SET_GAME_LEVEL'})} key={"2"}>{softGame ? 'Soft' : 'Long' } Game</Button>,
 				]}/>
 			<Content className="page-content">{children}</Content>
 		</React.Fragment>

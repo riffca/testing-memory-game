@@ -47,11 +47,12 @@ export default function(state = initState, action) {
 			const wantedIndex = cards.findIndex(item=>item.uuid===action.card.uuid)
 			const val = action.val
 
-
-			if(val !== null) {
-				cards[wantedIndex][action.prop] = val 
-			} else {
-				cards[wantedIndex][action.prop] = !cards[wantedIndex][action.prop]
+			if(wantedIndex!== -1) {
+				if(val !== null) {
+					cards[wantedIndex][action.prop] = val 
+				} else {
+					cards[wantedIndex][action.prop] = !cards[wantedIndex][action.prop]
+				}
 			}
 			return {
 				...state,

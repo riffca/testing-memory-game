@@ -10,25 +10,21 @@ const Game = ({ location: { pathname } }) => {
 		return null;
 	}
 
-	const timer = useSelector(state=>state.cards.timer)
 	const gameIsActive = useSelector(state=>state.cards.gameActive)
 	const dispatch = useDispatch()
 	return (
 		<PageLayout title="Memory Game">
 				<div className="wrap-cards">
-					<Cards />
+					{ !gameIsActive ? null : <Cards /> }
 
-						<div>
-						{ !gameIsActive ? 
-							<Button type="primary" onClick={()=>dispatch({type:'START_CARD_GAME'})}>
-								Start
-							</Button> : null }
+					<div>
+					{ !gameIsActive ? 
+						<Button type="primary" onClick={()=>dispatch({type:'START_CARD_GAME'})}>
+							Start
+						</Button> : null }
 
-						</div>
+					</div>
 
-					{ gameIsActive ? <div className='timeout'>
-						<span className="timeout__number">{timer}</span>
-					</div> : null } 
 				</div> 
 		</PageLayout>
 	);
