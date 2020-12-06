@@ -2,15 +2,17 @@ import {
 	SET_COUNT_DOWN, 
 	SET_CARD_PROP, 
 	SET_GAME_STATE, 
-	SET_TIMER } from "../actions/cards";
+	SET_TIMER,
+	SET_GAME_LEVEL } from "../actions/cards";
 
 import uuid from 'uuid'
 
 const initState = {
-	cards: createCards(),
+	cards: [],
 	countDown: 0,
 	timer: 0,
-	gameActive: false
+	gameActive: false,
+	softGame: true
 }
 
 export default function(state = initState, action) {
@@ -20,10 +22,17 @@ export default function(state = initState, action) {
 			return {
 				...state,
 				countDown: action.count
+			};		
+
+		case SET_GAME_LEVEL:
+			return {
+				...state,
+				softGame: !state.softGame
 			};			
 		case SET_GAME_STATE:
 			return {
 				...state,
+				cards: createCards(),
 				gameActive: action.active
 			};			
 
@@ -62,7 +71,6 @@ function createCards(){
 			active: false, 
 			opened: false,
 			clear: false,
-			finished: 0
 		}
 	})
 

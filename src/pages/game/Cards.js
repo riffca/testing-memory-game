@@ -13,9 +13,9 @@ const Cards = () => {
 
 	return (
 			<>
-				<div className="cards">
+				{ cards.length ? <div className="cards">
 					{renderCards}
-				</div>
+				</div> : null }
 
 			</>
 	);

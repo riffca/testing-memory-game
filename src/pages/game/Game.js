@@ -21,7 +21,7 @@ const Game = ({ location: { pathname } }) => {
 						<div>
 						{ !gameIsActive ? 
 							<Button type="primary" onClick={()=>dispatch({type:'START_CARD_GAME'})}>
-								Start Game
+								Start
 							</Button> : null }
 
 						</div>

@@ -6,6 +6,7 @@ export const SET_COUNT_DOWN = "SET_COUNT_DOWN";
 export const SET_CARD_PROP = "SET_CARD_PROP";
 export const SET_TIMER = "SET_TIMER";
 export const SET_GAME_STATE = "SET_GAME_STATE";
+export const SET_GAME_LEVEL = "SET_GAME_LEVEL";
 
 
 export function setActiveCard(card) {
@@ -68,7 +69,7 @@ function* clearCards(cards) {
 
 let timerChannel = null
 function* timerGameLogic(action) {
-	timerChannel = yield call(countup, 500);
+	timerChannel = yield call(countup, 120);
 
 	yield put({type: SET_GAME_STATE, active: true})
 	yield takeEvery(timerChannel, function* (secs) {
@@ -117,29 +118,30 @@ function* setActiveCardLogic(action) {
 			if(updatedCards.every(item=>item.clear)) {
 				timerChannel.close()
 				yield put({type: SET_GAME_STATE, active: false})
-				let data =JSON.parse(localStorage.getItem('card-results'))
-				if(!data) {
-					data = {results:[]}
-				}
-				data.results.push({ date: Date.now(), timer: gameTime })
-				localStorage.setItem('card-results',JSON.stringify(data.results))
+				let results =JSON.parse(localStorage.getItem('card-results'))
+				if(!results) results = []
+				results.push({ date: Date.now(), timer: gameTime })
+				localStorage.setItem('card-results',JSON.stringify(results))
 			}
 
 		} else {
-			let openedCards = cards.filter(item=>item.opened)
-			let itemsToDelete = []
 
-			openedCards.forEach(a=>{
-				openedCards.forEach(b=>{
-					if(a.id === b.id && a.uuid !== b.uuid) {
-						itemsToDelete.push(a)
-					}
+
+			let soft = yield select(state=>state.cards.softGame)
+			if(soft) {
+				let openedCards = cards.filter(item=>item.opened)
+				let itemsToDelete = []
+				openedCards.forEach(a=>{
+					openedCards.forEach(b=>{
+						if(a.id === b.id && a.uuid !== b.uuid) {
+							itemsToDelete.push(a)
+						}
+					})
 				})
-			})
-			for(let i=0; i<itemsToDelete.length;i++) {
-				yield put(setCardProp(itemsToDelete[i], 'clear', true))
-			}
-		
+				for(let i=0; i<itemsToDelete.length;i++) {
+					yield put(setCardProp(itemsToDelete[i], 'clear', true))
+				}
+			} 
 		}
 
 	}
