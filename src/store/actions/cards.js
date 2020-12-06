@@ -35,8 +35,8 @@ function* clearCards(cards) {
 }
 
 let timerChannel = null
-let maxTime = 10
 function* timerGameLogic(action) {
+	const maxTime = 120
 	timerChannel = yield call(countup, maxTime);
 	let cards = yield select(state=>state.cards.cards)
 
