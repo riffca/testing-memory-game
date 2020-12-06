@@ -4,6 +4,8 @@ import PageLayout from '../../layout/PageLayout';
 import Cards from './Cards'
 import { useSelector, useDispatch } from 'react-redux'
 import { Button } from 'antd';
+
+import ICON from '@/components/icons/Icon'
 const Game = ({ location: { pathname } }) => {
 
 	if (pathname !== '/') {
@@ -15,6 +17,7 @@ const Game = ({ location: { pathname } }) => {
 	return (
 		<PageLayout title="Memory Game">
 				<div className="wrap-cards">
+
 					{ !gameIsActive ? null : <Cards /> }
 
 					<div>
