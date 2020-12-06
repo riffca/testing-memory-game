@@ -2,22 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PageLayout from '../../layout/PageLayout';
 import Cards from './Cards'
-import { useSelector } from 'react-redux'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { Button } from 'antd';
 const Game = ({ location: { pathname } }) => {
 
 	if (pathname !== '/') {
 		return null;
 	}
 
-	const timeout = useSelector(state=>state.cards.countDown)
-
+	const timer = useSelector(state=>state.cards.timer)
+	const gameIsActive = useSelector(state=>state.cards.gameActive)
+	const dispatch = useDispatch()
 	return (
 		<PageLayout title="Memory Game">
 				<div className="wrap-cards">
 					<Cards />
-					{ timeout !== 0 ? <div className='timeout'>
-						<span className="timeout__number">{timeout}</span>
+
+						<div>
+						{ !gameIsActive ? 
+							<Button type="primary" onClick={()=>dispatch({type:'START_CARD_GAME'})}>
+								Start Game
+							</Button> : null }
+
+						</div>
+
+					{ gameIsActive ? <div className='timeout'>
+						<span className="timeout__number">{timer}</span>
 					</div> : null } 
 				</div> 
 		</PageLayout>

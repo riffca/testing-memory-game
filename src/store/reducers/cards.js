@@ -1,12 +1,16 @@
-import { SET_ACTIVE_CARD, SET_COUNT_DOWN, SET_CARD_PROP } from "../actions/cards";
+import { 
+	SET_COUNT_DOWN, 
+	SET_CARD_PROP, 
+	SET_GAME_STATE, 
+	SET_TIMER } from "../actions/cards";
 
 import uuid from 'uuid'
-
-
 
 const initState = {
 	cards: createCards(),
 	countDown: 0,
+	timer: 0,
+	gameActive: false
 }
 
 export default function(state = initState, action) {
@@ -16,6 +20,17 @@ export default function(state = initState, action) {
 			return {
 				...state,
 				countDown: action.count
+			};			
+		case SET_GAME_STATE:
+			return {
+				...state,
+				gameActive: action.active
+			};			
+
+		case SET_TIMER:
+			return {
+				...state,
+				timer: action.val
 			};				
 		
 		case SET_CARD_PROP:
