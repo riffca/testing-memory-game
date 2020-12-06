@@ -7,6 +7,7 @@ export const SET_CARD_PROP = "SET_CARD_PROP";
 export const SET_TIMER = "SET_TIMER";
 export const SET_GAME_STATE = "SET_GAME_STATE";
 export const SET_GAME_LEVEL = "SET_GAME_LEVEL";
+export const SET_LAST_PAIRS = "SET_LAST_PAIRS";
 
 
 export function setActiveCard(card) {
@@ -37,6 +38,8 @@ function* clearCards(cards) {
 let timerChannel = null
 function* timerGameLogic(action) {
 	const maxTime = 120
+	yield put({type: SET_TIMER, val: 0})
+	yield put({type: SET_LAST_PAIRS, pairs: []})
 	timerChannel = yield call(countup, maxTime);
 	let cards = yield select(state=>state.cards.cards)
 
@@ -83,6 +86,7 @@ function* setActiveCardLogic(action) {
 
 			yield put(setCardProp(currentActiveCard, 'clear'))
 			yield put(setCardProp(clickCard, 'clear'))
+			yield put({type: SET_LAST_PAIRS, pairs: [currentActiveCard]})
 
 			yield put({type: SET_COUNT_DOWN, count: 0})
 			fiveSecChannel.close()
@@ -115,6 +119,7 @@ function* setActiveCardLogic(action) {
 				})
 				for(let i=0; i<itemsToDelete.length;i++) {
 					yield put(setCardProp(itemsToDelete[i], 'clear', true))
+					yield put({type: SET_LAST_PAIRS, pairs: [itemsToDelete[i]]})
 				}
 			} 
 		}

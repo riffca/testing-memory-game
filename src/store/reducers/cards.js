@@ -3,7 +3,8 @@ import {
 	SET_CARD_PROP, 
 	SET_GAME_STATE, 
 	SET_TIMER,
-	SET_GAME_LEVEL } from "../actions/cards";
+	SET_GAME_LEVEL,
+	SET_LAST_PAIRS } from "../actions/cards";
 
 import uuid from 'uuid'
 
@@ -12,7 +13,8 @@ const initState = {
 	countDown: 0,
 	timer: 0,
 	gameActive: false,
-	softGame: true
+	softGame: true,
+	lastPairs: []
 }
 
 export default function(state = initState, action) {
@@ -22,6 +24,12 @@ export default function(state = initState, action) {
 			return {
 				...state,
 				countDown: action.count
+			};				
+
+		case SET_LAST_PAIRS:
+			return {
+				...state,
+				lastPairs: action.pairs
 			};		
 
 		case SET_GAME_LEVEL:

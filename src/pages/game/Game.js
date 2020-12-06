@@ -13,10 +13,11 @@ const Game = ({ location: { pathname } }) => {
 	}
 
 	const gameIsActive = useSelector(state=>state.cards.gameActive)
+	const lastPairs = useSelector(state=>state.cards.lastPairs)
 	const dispatch = useDispatch()
 	return (
 		<PageLayout title="Memory Game">
-				<div className="wrap-cards">
+				<div className="wrap-cards game">
 
 					{ !gameIsActive ? null : <Cards /> }
 
@@ -25,6 +26,9 @@ const Game = ({ location: { pathname } }) => {
 						<Button type="primary" onClick={()=>dispatch({type:'START_CARD_GAME'})}>
 							Start
 						</Button> : null }
+
+
+					{ gameIsActive ? lastPairs.map(item=><div key={item.uuid}>last pair {item.id}</div>) : null }
 
 					</div>
 
