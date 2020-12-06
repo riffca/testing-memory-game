@@ -10,7 +10,7 @@ import { formatDate } from '@/utils';
 const Statistics = () => {
 	const history = useHistory();
 
-	let results = JSON.parse(localStorage.getItem('card-results'))
+	let results = JSON.parse(localStorage.getItem('card-results')).sort((a,b)=>b.date-a.date)
 
 	const renderCards =	results.map((item,index)=><div key={index} className="statistics__item">
 			<div>Date:<span className="statistics__number">{formatDate('MM/DD/YYYY, HH:mm:ss', item.date)}</span></div>
