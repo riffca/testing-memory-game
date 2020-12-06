@@ -13,7 +13,7 @@ const Statistics = () => {
 	let results = JSON.parse(localStorage.getItem('card-results')).sort((a,b)=>b.date-a.date)
 
 	const renderCards =	results.map((item,index)=><div key={index} className="statistics__item">
-			<div>Date:<span className="statistics__number">{formatDate('MM/DD/YYYY, HH:mm:ss', item.date)}</span></div>
+			<div>Date:<span className="statistics__number">{formatDate(item.date)}</span></div>
 			<div>Time:<span className="statistics__number">{item.timer}s</span></div>
 		</div>
 	)
